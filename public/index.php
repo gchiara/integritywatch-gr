@@ -130,6 +130,9 @@
             <div class="dc-data-count count-box">
               <div class="filter-count">0</div>από τους <strong class="total-count">0</strong> βουλευτές
             </div>
+            <div class="dc-data-count count-box count-box-revenue">
+              <div class="filter-count">0</div>από τους <strong class="total-count">0</strong> δηλωμένα έσοδα
+            </div>
             <div class="footer-input">
               <input type="text" id="search-input" placeholder="Αναζήτηση">
               <i class="material-icons">search</i>

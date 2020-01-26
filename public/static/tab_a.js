@@ -46791,15 +46791,16 @@ var vuedata = {
   },
   modalShowTable: '',
   colors: {
-    generic: ["#3b95d0", "#4081ae", "#406a95", "#395a75"],
     default1: "#2b90b8",
-    pie1: {
-      "Poslovni subjekt": "#0d506b",
-      "Kmetijsko gospodarstvo": "#1d7598"
-    },
-    pie2: {
-      "Neomejeno": "#0d506b",
-      "Omejeno": "#1d7598"
+    revenue: {
+      "> 100.000€": "#0d506b",
+      "50.001€ - 100.000€": "#0e6386",
+      "10.001€ - 50.000€": "#1d7598",
+      "5.001—10.000€": "#2b90b8",
+      "1.001—5.000€": "#55aacb",
+      "1€ - 1.000€": "#81c1da",
+      "Καθόλου εισόδημα": "#a9d4e6",
+      "/": "#ccc"
     }
   } //Set vue components and Vue app
 
@@ -47020,6 +47021,8 @@ var lobbyist_typeList = {};
 (0, _d3Request.csv)('./data/mp-list.csv?' + randomPar, function (err, mps) {
   (0, _d3Request.json)('./data/declarations.json?' + randomPar, function (err, declarations) {
     //Loop through list to get declaration
+    var iniTotReveue = 0;
+
     _.each(mps, function (d) {
       d.declaration = {};
 
@@ -47055,7 +47058,9 @@ var lobbyist_typeList = {};
         d.declaration.totRevenue = d.declaration.totRevenue.toFixed(2);
         d.declaration.newestDecDate = "/"; //Get income category
 
-        d.declaration.incomeCategory = getIncomeCategory(d.declaration.totRevenue);
+        d.declaration.incomeCategory = getIncomeCategory(d.declaration.totRevenue); //Add totRevenue to overall total to initialize footer counter
+
+        iniTotReveue += parseFloat(d.declaration.totRevenue);
       }
     }); //Set dc main vars. The second crossfilter is used to handle the travels stacked bar chart.
 
@@ -47124,13 +47129,9 @@ var lobbyist_typeList = {};
         return thisKey + ': ' + d.value;
       }).dimension(dimension).ordering(function (d) {
         return order.indexOf(d.key);
-      })
-      /*
-      .colorCalculator(function(d, i) {
-        return vuedata.colors.pie1[d.key];
-      })
-      */
-      .group(group);
+      }).colorCalculator(function (d, i) {
+        return vuedata.colors.revenue[d.key];
+      }).group(group);
       chart.render();
     }; //CHART 3
 
@@ -47354,7 +47355,60 @@ var lobbyist_typeList = {};
 
     counter.on("renderlet.resetall", function (c) {
       RefreshTable();
-    }); //Window resize function
+    });
+
+    function drawRevenueCounter() {
+      var dim = ndx.dimension(function (d) {
+        return d.Last_name;
+      });
+      var group = dim.group().reduce(function (p, d) {
+        p.nb += 1;
+
+        if (!d.Last_name || !d.declaration.totRevenue) {
+          return p;
+        }
+
+        p.revenue += +d.declaration.totRevenue;
+        return p;
+      }, function (p, d) {
+        p.nb -= 1;
+
+        if (!d.Last_name || !d.declaration.totRevenue) {
+          return p;
+        }
+
+        p.revenue -= d.declaration.totRevenue;
+        return p;
+      }, function (p, d) {
+        return {
+          nb: 0,
+          revenue: 0
+        };
+      });
+      group.order(function (p) {
+        return p.nb;
+      });
+      var revenue = 0;
+      var counter = dc.dataCount(".count-box-revenue").dimension(group).group({
+        value: function value() {
+          revenue = 0;
+          return group.all().filter(function (kv) {
+            if (kv.value.nb > 0) {
+              revenue += +kv.value.revenue;
+            }
+
+            return kv.value.nb > 0;
+          }).length;
+        }
+      }).renderlet(function (chart) {
+        $(".count-box-revenue .filter-count").text(addcommas(Math.round(revenue)) + ' €');
+        $(".count-box-revenue .total-count").text(addcommas(Math.round(iniTotReveue)) + ' €');
+        revenue = 0;
+      });
+      counter.render();
+    }
+
+    drawRevenueCounter(); //Window resize function
 
     window.onresize = function (event) {
       resizeGraphs();

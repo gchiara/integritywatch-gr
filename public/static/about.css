@@ -541,8 +541,11 @@ div.dc-html-legend {
     display: none;
   }
 }
-@media only screen and (max-width: 1280px) {
-  .footer-bar .footer-counts .count-box.count-box-lobbyists, .footer-bar .footer-counts .count-box.count-box-institutions {
+.footer-bar .footer-counts .count-box.count-box-revenue {
+  width: 190px;
+}
+@media only screen and (max-width: 768px) {
+  .footer-bar .footer-counts .count-box.count-box-revenue {
     display: none;
   }
 }
