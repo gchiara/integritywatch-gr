@@ -289,14 +289,16 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
         d.declaration.totRevenueSpouse = 0;
         d.declaration.topRevenue = {};
         d.declaration.revenueNum = 0;
+        d.declaration.ownRevenues = [];
         _.each(d.declaration.revenue, function (r) {
-          if(r.receipt = "ΥΠΟΧΡΕΟΣ"){
+          if(r.receipt == "ΥΠΟΧΡΕΟΣ"){
             d.declaration.revenueNum ++;
+            d.declaration.ownRevenues.push(r);
             d.declaration.totRevenue += parseAmount(r.amount);
             if(!d.declaration.topRevenue.amount || parseAmount(d.declaration.topRevenue.amount) < parseAmount(r.amount)) {
               d.declaration.topRevenue = r;
             }
-          } else if(r.receipt = "ΣΥΖΥΓΟΣ") {
+          } else if(r.receipt == "ΣΥΖΥΓΟΣ") {
             d.declaration.totRevenueSpouse += parseAmount(r.amount);
           }
         });
@@ -488,7 +490,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
             "defaultContent":"N/A",
             "data": function(d) {
               if(d.declaration.revenue) {
-                return d.declaration.revenue.length;
+                return d.declaration.ownRevenues.length;
               }
               return '0';
             }

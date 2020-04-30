@@ -107,7 +107,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="rev in selectedElement.declaration.revenue">
+                        <tr v-for="rev in selectedElement.declaration.ownRevenues">
                           <td>{{ rev.receipt }}</td>
                           <td>{{ rev.type }}</td>
                           <td>{{ rev.amount }}</td>
