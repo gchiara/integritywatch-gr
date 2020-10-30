@@ -257,6 +257,7 @@ div.dc-html-legend {
 /* HEADER */
 #iw-nav {
   padding: 5px 25px;
+  background: #fff;
 }
 #iw-nav .navbar-brand img {
   height: 50px;
@@ -546,6 +547,22 @@ div.dc-html-legend {
 }
 @media only screen and (max-width: 768px) {
   .footer-bar .footer-counts .count-box.count-box-revenue {
+    display: none;
+  }
+}
+.footer-bar .footer-counts .count-box.count-box-companies {
+  width: 190px;
+}
+@media only screen and (max-width: 768px) {
+  .footer-bar .footer-counts .count-box.count-box-companies {
+    display: none;
+  }
+}
+.footer-bar .footer-counts .count-box.count-box-deposits {
+  width: 190px;
+}
+@media only screen and (max-width: 768px) {
+  .footer-bar .footer-counts .count-box.count-box-deposits {
     display: none;
   }
 }

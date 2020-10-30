@@ -25,7 +25,7 @@ import ChartHeader from './components/ChartHeader.vue';
 // Data object - is also used by Vue
 
 var vuedata = {
-  page: 'tabB',
+  page: 'tabA',
   loader: true,
   readMore: false,
   showInfo: true,
@@ -35,22 +35,22 @@ var vuedata = {
   instFilter: 'all',
   charts: {
     party: {
-      title: 'Πολιτικό κόμμα',
-      info: ''
+      title: 'Πολιτικά Κόμματα',
+      info: 'Το γράφημα εμφανίζει τα έσοδα από τις δηλώσεις περιουσιακής κατάστασης των βουλευτών βάσει του κόμματος στο οποίο ανήκουν. Eπιλέγοντας ένα ή περισσότερα κόμματα μπορείτε να συγκρίνετε τα αντίστοιχα δεδομένα στα διπλανά γραφήματα.'
     },
     income: {
       title: 'Ετήσια δηλωμένα έσοδα',
-      info: ''
+      info: 'Το γράφημα εμφανίζει την κατανομή των συνολικών ετήσιων εσόδων των βουλευτών.'
     },
     topRevenue: {
-      title: 'υψηλότερο εισόδημα - top 10',
-      info: ''
+      title: 'Υψηλότερα έσοδα- top 10',
+      info: 'Το γράφημα εμφανίζει τους δέκα βουλευτές με τα υψηλότερα συνολικά έσοδα.'
     },
     mainTable: {
       chart: null,
       type: 'table',
-      title: 'Table',
-      info: ''
+      title: 'Πίνακας βουλευτών',
+      info: 'Στον παρακάτω πίνακα εμφανίζονται αναλυτικά τα δεδομένα των βουλευτών ως προς το πολιτικό κόμμα στο οποίο ανήκουν, το σύνολο των δηλωθέντων εσόδων, τον αριθμό των πηγών εσόδων, την ημερομηνία δήλωσης του εσόδου και το ποια είναι η υψηλότερη πηγή εσόδων.'
     }
   },
   selectedElement: { "P": "", "Sub": ""},
@@ -281,6 +281,10 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
       var thisDec = _.find(declarations, function (dec) { return dec.id == d.ID });
       if(thisDec) {
         d.declaration = thisDec;
+      }
+      //Party name edit
+      if(d.Party_GR == "Κομμουνιστικό Κόμμα Ελλάδας") {
+        d.Party_GR = "ΚΟΜΜΟΥΝΙΣΤΙΚΟ ΚΟΜΜΑ ΕΛΛΑΔΑΣ";
       }
       //Loop through declarations data to apply fixes and calculations
       if(d.declaration.id) {

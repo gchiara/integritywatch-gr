@@ -23,9 +23,9 @@
               <!-- INFO -->
               <div class="col-md-8 chart-col" v-if="showInfo">
                 <div class="boxed-container description-container">
-                  <h1>Στοιχεία περιουσιακής κατάστασης</h1>
-                  <p>Lorem Ipsum <a href="#" @click="readMore = true">Read more</a>.</p>
-                  <p v-show="readMore">Lorem Ipsum</p>  
+                  <h1>Πολιτική ακεραιότητα και ανοιχτά δεδομένα</h1>
+                  <p>Το Integrity Watch είναι μια διαδραστική πλατφόρμα ανοιχτών δεδομένων για την πολιτική ακεραιότητα. Απευθύνεται σε δημόσιες αρχές, σε δημοσιογράφους, οργανώσεις της κοινωνίας των πολιτών και στους πολίτες που ενδιαφέρονται να παρακολουθούν τις πηγές χρηματοδότησης της πολιτικής στην Ελλάδα.</p>
+                  <p><a href="/about.php">Δείτε περισσότερα</a></p>
                   <i class="material-icons close-btn" @click="showInfo = false">close</i>
                 </div>
               </div>
@@ -59,13 +59,13 @@
                 <table class="table table-hover dc-data-table" id="dc-data-table">
                   <thead>
                     <tr class="header">
-                      <th class="header">Nr</th> 
-                      <th class="header">Ονομα</th>
+                      <th class="header">Αρ.</th> 
+                      <th class="header">Όνομα</th>
                       <th class="header">Πολιτικό κόμμα</th>
-                      <th class="header">συνολικό εισόδημα</th>
-                      <th class="header">Αριθμός πηγών εσόδω</th>
+                      <th class="header">Συνολικά έσοδα</th>
+                      <th class="header">Αριθμός πηγών εσόδων</th>
                       <th class="header">Ημερομηνία της δήλωσης</th>
-                      <th class="header">Υψηλότερη πηγή εισοδήματος</th> 
+                      <th class="header">Πηγή μεγαλύτερων εσόδων</th> 
                     </tr>
                   </thead>
                 </table>
@@ -91,11 +91,10 @@
               <div class="container">
                 <div class="row">
                   <div class="col-md-12">
-                    <div class="details-line"><span class="details-line-title">Ημερομηνία γέννησης:</span> </div>
+                    <div class="details-line"><span class="details-line-title">Σύνδεσμος Δήλωσης</span> </div>
                     <div class="details-line"><span class="details-line-title">Προφίλ:</span> {{ selectedElement.Link_DOI }}</div>
-                    <div class="details-line" v-if="selectedElement.declaration"><span class="details-line-title">το σύνολο των δηλωθέντων εσόδων:</span> {{ selectedElement.declaration.totRevenue }}</div>
-                    <div class="details-line" v-if="selectedElement.declaration"><span class="details-line-title">Περιουσιακά στοιχεία που δηλώνονται από σύζυγο:</span> {{ selectedElement.declaration.totRevenueSpouse }}</div>
-                    <div class="details-line"><span class="details-line-title">όλα τα δηλωθέντα έσοδα</span></div>
+                    <div class="details-line" v-if="selectedElement.declaration"><span class="details-line-title">Σύνολο δηλωθέντων εσόδων</span> {{ selectedElement.declaration.totRevenue }}</div>
+                    <div class="details-line" v-if="selectedElement.declaration"><span class="details-line-title">Έσοδα που δηλώθηκαν από σύζυγο</span> {{ selectedElement.declaration.totRevenueSpouse }}</div>
                     <table class="modal-table" v-if="selectedElement.declaration">
                       <thead>
                         <tr>

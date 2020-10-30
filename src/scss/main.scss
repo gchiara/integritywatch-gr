@@ -8,6 +8,7 @@ $color_lobby: #449188;
 
 #iw-nav {
   padding: 5px 25px;
+  background: #fff;
   .navbar-brand {
     img {
       height: 50px;
@@ -277,6 +278,18 @@ $color_lobby: #449188;
         display: none;
       }
       &.count-box-revenue {
+        width: 190px;
+        @media only screen and (max-width: 768px) {
+          display: none;
+        }
+      }
+      &.count-box-companies {
+        width: 190px;
+        @media only screen and (max-width: 768px) {
+          display: none;
+        }
+      }
+      &.count-box-deposits {
         width: 190px;
         @media only screen and (max-width: 768px) {
           display: none;
