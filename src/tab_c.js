@@ -36,19 +36,23 @@ var vuedata = {
   charts: {
     party: {
       title: 'Πολιτικό κόμμα',
-      info: ''
+      info: 'Το γράφημα εμφανίζει τα ακίνητα από τις δηλώσεις περιουσιακής κατάστασης των βουλευτών βάσει του κόμματος στο οποίο ανήκουν. Eπιλέγοντας ένα ή περισσότερα κόμματα μπορείτε να συγκρίνετε τα αντίστοιχα δεδομένα στα διπλανά γραφήματα'
     },
     properties: {
-      title: 'Αριθμός ιδιοτήτων',
-      info: ''
+      title: 'Αριθμός ακινήτων',
+      info: 'Το γράφημα εμφανίζει τον αριθμό των δηλωμένων ακινήτων των Βουλευτών σε 6 κατηγορίες. Επιλέξτε μια ή περισσότερες κατηγορίες και τα διπλανά γραφήματα θα προσαρμοστούν αυτόματα.'
     },
     businesses: {
       title: 'Αριθμός δηλωθείσας ιδιοκτησίας επιχείρησης',
       info: ''
     },
     topProperties: {
-      title: 'δηλωμένα ακίνητα - top 10',
-      info: ''
+      title: 'δηλωμένα ακίνητα',
+      info: 'Το γράφημα εμφανίζει τους 10 Βουλευτές που έχουν δηλώσει τα περισσότερα ακίνητα. Επιλέξτε έναν ή περισσότερους Βουλευτές και τα διπλανά γραφήματα θα προσαρμοστούν αυτόματα.'
+    },
+    types: {
+      title: 'Είδη ακινήτων',
+      info: 'Το γράφημα εμφανίζει τα διαφορετικά είδη ακινήτων που δήλωσαν οι Βουλευτές. Επιλέξτε ένα ή περισσότερα είδη και τα διπλανά γραφήματα θα προσαρμοστούν αυτόματα.'
     },
     mainTable: {
       chart: null,
@@ -59,14 +63,41 @@ var vuedata = {
   },
   selectedElement: { "P": "", "Sub": ""},
   modalShowTable: '',
+  typeStreamlined: {
+    "ΔΙΑΜΕΡΙΣΜΑ":"ΔΙΑΜΕΡΙΣΜΑ",
+    "ΟΙΚΟΠΕΔΟ":"ΟΙΚΟΠΕΔΟ",
+    "ΑΠΟΘΗΚΗ":"ΑΠΟΘΗΚΗ",
+    "ΕΠΑΓΓΕΛΜΑΤΙΚ Η ΣΤΕΓΗ /  ΚΑΤΑΣΤΗΜΑ":"ΕΠΑΓΓΕΛΜΑΤΙΚ Η ΣΤΕΓΗ /  ΚΑΤΑΣΤΗΜΑ",
+    "ΜΟΝΟΚΑΤΟΙΚΙ Α":"ΜΟΝΟΚΑΤΟΙΚΙ Α",
+    "ΔΕΝΔΡΟΚΑΛΛΙ ΕΡΓΕΙΑ":"ΔΕΝΔΡΟΚΑΛΛΙ ΕΡΓΕΙΑ",
+    "ΚΑΛΛΙΕΡΓΕΙΑ":"ΚΑΛΛΙΕΡΓΕΙΑ",
+    "ΒΟΣΚΟΤΟΠΟΣ /  ΧΕΡΣΕΕΣ ΜΗ  ΚΑΛΛΙΕΡΓΗΣΙΜ ΕΣ ΕΚΤΑΣΕΙΣ":"ΒΟΣΚΟΤΟΠΟΣ /  ΧΕΡΣΕΕΣ ΜΗ  ΚΑΛΛΙΕΡΓΗΣΙΜ",
+    "ΔΙΚΑΙΩΜΑ  ΥΨΟΥΝ":"ΔΙΚΑΙΩΜΑ  ΥΨΟΥΝ",
+    "ΒΟΣΚΟΤΟΠΟΣ /  ΧΕΡΣΕΕΣ ΜΗ  ΚΑΛΛΙΕΡΓΗΣΙΜ":"ΒΟΣΚΟΤΟΠΟΣ /  ΧΕΡΣΕΕΣ ΜΗ  ΚΑΛΛΙΕΡΓΗΣΙΜ",
+    "ΕΣ ΕΚΤΑΣΕΙΣ":"ΕΣ ΕΚΤΑΣΕΙΣ",
+    "ΒΟΣΚΟΤΟΠΟΣ /  ΧΕΡΣΕΕΣ ΜΗ":"ΒΟΣΚΟΤΟΠΟΣ /  ΧΕΡΣΕΕΣ ΜΗ",
+    "ΚΑΛΛΙΕΡΓΗΣΙΜ ΕΣ ΕΚΤΑΣΕΙΣ":"ΚΑΛΛΙΕΡΓΕΙΑ",
+    "ΔΑΣΙΚΗ  ΕΚΤΑΣΗ":"ΔΑΣΙΚΗ  ΕΚΤΑΣΗ",
+    "ΘΕΣΗ  ΣΤΑΘΜΕΥΣΗΣ":"ΘΕΣΗ  ΣΤΑΘΜΕΥΣΗΣ",
+    "ΒΙΟΤΕΧΝΙΚΟ/BI OMHXANIKO  ΚΤΙΡΙΟ":"ΒΙΟΤΕΧΝΙΚΟ/BI OMHXANIKO  ΚΤΙΡΙΟ",
+    "ΑΛΛΗ  ΠΕΡΙΠΤΩΣΗ":"ΑΛΛΗ  ΠΕΡΙΠΤΩΣΗ",
+    "ΕΠΑΓΓΕΛΜΑΤΙΚ Η ΣΤΕΓΗ /":"ΕΠΑΓΓΕΛΜΑΤΙΚ Η ΣΤΕΓΗ /",
+    "ΚΑΤΑΣΤΗΜΑ":"ΕΠΑΓΓΕΛΜΑΤΙΚ Η ΣΤΕΓΗ /  ΚΑΤΑΣΤΗΜΑ",
+    "ΕΠΑΓΓΕΛΜΑΤΙΚ":"ΕΠΑΓΓΕΛΜΑΤΙΚ Η ΣΤΕΓΗ /  ΚΑΤΑΣΤΗΜΑ",
+    "Η ΣΤΕΓΗ /  ΚΑΤΑΣΤΗΜΑ":"ΕΠΑΓΓΕΛΜΑΤΙΚ Η ΣΤΕΓΗ /  ΚΑΤΑΣΤΗΜΑ",
+    "ΔΕΝΔΡΟΚΑΛΛΙ":"ΔΕΝΔΡΟΚΑΛΛΙ ΕΡΓΕΙΑ",
+    "ΕΡΓΕΙΑ":"ΕΡΓΕΙΑ",
+    "":"Δεν αναφέρεται"
+  },
   colors: {
     default1: "#2b90b8",
     properties: {
-      ">20": "#0d506b",
+      ">30": "#07425a",
+      "20-30": "#0d506b",
       "10-20": "#0e6386",
       "5-10": "#55aacb",
       "1-5": "#a9d4e6",
-      "Δεν έχουν δηλωθεί ιδιότητες": "#ccc",
+      "Δεν έχουν δηλωθεί ακίνητα": "#ccc",
     },
     businesses: {
       ">10": "#0d506b",
@@ -91,18 +122,18 @@ new Vue({
   methods: {
     //Share
     downloadDataset: function () {
-      window.open('./data/tab_b/parliament.csv');
+      window.open('./data/declarations.json');
     },
     share: function (platform) {
       if(platform == 'twitter'){
         var thisPage = window.location.href.split('?')[0];
-        var shareText = 'Share text here ' + thisPage;
+        var shareText = '' + thisPage;
         var shareURL = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText);
         window.open(shareURL, '_blank');
         return;
       }
       if(platform == 'facebook'){
-        var toShareUrl = 'https://integritywatch.si';
+        var toShareUrl = 'https://integritywatch.gr';
         var shareURL = 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(toShareUrl);
         window.open(shareURL, '_blank', 'toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250,top=300,left=300');
         return;
@@ -128,15 +159,22 @@ var charts = {
     type: 'pie',
     divId: 'properties_chart'
   },
+  /*
   businesses: {
     chart: dc.pieChart("#businesses_chart"),
     type: 'pie',
     divId: 'businesses_chart'
   },
+  */
   topProperties: {
     chart: dc.rowChart("#topProperties_chart"),
     type: 'row',
     divId: 'topProperties_chart'
+  },
+  types: {
+    chart: dc.rowChart("#types_chart"),
+    type: 'row',
+    divId: 'types_chart'
   },
   mainTable: {
     chart: null,
@@ -272,34 +310,56 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
     //Loop through list to get declaration
     var iniTotProperties = 0;
     var iniTotBusinesses = 0;
+    var propertyTypes = [];
     _.each(mps, function (d) {
       d.declaration = {};
       var thisDec = _.find(declarations, function (dec) { return dec.id == d.ID });
       if(thisDec) {
         d.declaration = thisDec;
       }
-      //Party name edit
-      if(d.Party_GR == "Κομμουνιστικό Κόμμα Ελλάδας") {
-        d.Party_GR = "ΚΟΜΜΟΥΝΙΣΤΙΚΟ ΚΟΜΜΑ ΕΛΛΑΔΑΣ";
+      if(d.ID == "1473587") {
+        console.log(d.declaration);
       }
+      d.propertyTypes = [];
       //Loop through declarations data to apply fixes and calculations
       if(d.declaration.id) {
+        d.propertiesAmt = 0;
         //Get properties
-        d.declaration.propertiesCategory = "Δεν έχουν δηλωθεί ιδιότητες";
+        d.declaration.propertiesCategory = "Δεν έχουν δηλωθεί ακίνητα";
         if(d.declaration.property1) {
-          d.propertiesAmt = 0;
-          d.propertiesAmt += d.declaration.property1.length
+          var propertiesToKeep = [];
+          d.declaration.ownProperty1 = [];
+          d.declaration.ownProperty2 = [];
+          _.each(d.declaration.property1, function (x, i) {
+            x.streamlinedType = vuedata.typeStreamlined[x.type];
+            d.propertyTypes.push(x.streamlinedType);
+            if(!x.streamlinedType) {
+              console.log(x.type);
+            }
+            if(x.holder !== "ΣΥΖΥΓΟΣ") {
+              propertiesToKeep.push(x.aa.replace("  "," "));
+              d.declaration.ownProperty1.push(x);
+            }
+          });
+          _.each(d.declaration.property2, function (x, i) {
+            if(propertiesToKeep.indexOf(x.aa.replace("  "," ")) > -1) {
+              d.declaration.ownProperty2.push(x);
+            }
+          });
+          d.propertiesAmt += d.declaration.ownProperty1.length;
           iniTotProperties += d.propertiesAmt;
           if(d.propertiesAmt == 0) {
-            d.declaration.propertiesCategory = "Δεν έχουν δηλωθεί ιδιότητες";
+            d.declaration.propertiesCategory = "Δεν έχουν δηλωθεί ακίνητα";
           } else if(d.propertiesAmt <= 5) {
             d.declaration.propertiesCategory = "1-5";
           } else if(d.propertiesAmt <= 10) {
             d.declaration.propertiesCategory = "5-10";
           } else if(d.propertiesAmt <= 20) {
             d.declaration.propertiesCategory = "10-20";
+          } else if(d.propertiesAmt <= 30) {
+            d.declaration.propertiesCategory = "20-30";
           } else {
-            d.declaration.propertiesCategory = ">20";
+            d.declaration.propertiesCategory = ">30";
           }
         }
         //Get businesses
@@ -322,9 +382,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
       }
     });
 
-    
-  
-
+    console.log(propertyTypes);
     //Set dc main vars. The second crossfilter is used to handle the travels stacked bar chart.
     var ndx = crossfilter(mps);
     var searchDimension = ndx.dimension(function (d) {
@@ -374,11 +432,11 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
         if(d.declaration && d.declaration.propertiesCategory) {
           return d.declaration.propertiesCategory;
         }
-        return "Δεν έχουν δηλωθεί ιδιότητες";
+        return "Δεν έχουν δηλωθεί ακίνητα";
       });
       var group = dimension.group().reduceSum(function (d) { return 1; });
       var sizes = calcPieSize(charts.properties.divId);
-      var order = ["Δεν έχουν δηλωθεί ιδιότητες", "1-5", "5-10", "10-20", ">20"]
+      var order = ["Δεν έχουν δηλωθεί ακίνητα", "1-5", "5-10", "10-20", "20-30", ">30"]
       chart
         .width(sizes.width)
         .height(sizes.height)
@@ -492,6 +550,41 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
         //chart.xAxis().tickFormat(numberFormat);
         chart.render();
     }
+
+    //CHART 5
+    var createTypesChart = function() {
+      var chart = charts.types.chart;
+      var dimension = ndx.dimension(function (d) {
+        return d.propertyTypes;
+      }, true);
+      var group = dimension.group().reduceSum(function (d) {
+          return 1;
+      });
+      var width = recalcWidth(charts.types.divId);
+      var charsLength = recalcCharsLength(width);
+      chart
+        .width(width)
+        .height(500)
+        .margins({top: 0, left: 0, right: 0, bottom: 20})
+        .group(group)
+        .dimension(dimension)
+        .colorCalculator(function(d, i) {
+          return vuedata.colors.default1;
+        })
+        .label(function (d) {
+          if(d.key && d.key.length > charsLength){
+            return d.key.substring(0,charsLength) + '...';
+          }
+          return d.key;
+        })
+        .title(function (d) {
+            return d.key + ': ' + d.value;
+        })
+        .elasticX(true)
+        .xAxis().ticks(4);
+        //chart.xAxis().tickFormat(numberFormat);
+        chart.render();
+    }
     
     //TABLE
     var createTable = function() {
@@ -531,12 +624,10 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
             "targets": 3,
             "defaultContent":"N/A",
             "data": function(d) {
-              if(d.propertiesAmt) {
               return d.propertiesAmt;
-              }
-              return "/";
             }
           },
+          /*
           {
             "searchable": false,
             "orderable": true,
@@ -549,10 +640,11 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
                 return "/";
             }
           },
+          */
           {
             "searchable": false,
             "orderable": true,
-            "targets": 5,
+            "targets": 4,
             "defaultContent":"N/A",
             "data": function(d) {
               if(d.declaration) {
@@ -643,8 +735,9 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
     //Render charts
     createPartyChart();
     createPropertiesChart();
-    createBusinessesChart();
+    //createBusinessesChart();
     createTopPropertiesChart();
+    createTypesChart();
     createTable();
 
     $('.dataTables_wrapper').append($('.dataTables_length'));

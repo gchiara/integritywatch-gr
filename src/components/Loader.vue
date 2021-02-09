@@ -6,7 +6,7 @@
       </div>
       <div class="loader"></div>
       <div class="loader-text below">
-        Please wait a moment for the data to load ...
+        Παρακαλούμε περιμένετε μια στιγμή να φορτωθούν τα δεδομένα
       </div>
     </div>
   </div>

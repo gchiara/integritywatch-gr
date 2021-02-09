@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>IW GR</title>
+    <title>Integrity Watch Greece - Έσοδα</title>
     <!-- Add twitter and og meta here -->
+    <meta property="og:url" content="https://www.integritywatch.gr" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Integrity Watch Greece - Έσοδα" />
+    <meta property="og:description" content="Τα έσοδα των Βουλευτών - Διαδραστικά γραφήματα ανοιχτών δεδομένων για τα έσοδα που δήλωσαν οι Έλληνες Βουλευτές στα Πόθεν Έσχες του 2019." />
+    <meta property="og:image" content="https://www.integritywatch.gr/images/thumbnail.png" />
     <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -24,7 +29,7 @@
               <div class="col-md-8 chart-col" v-if="showInfo">
                 <div class="boxed-container description-container">
                   <h1>Πολιτική ακεραιότητα και ανοιχτά δεδομένα</h1>
-                  <p>Το Integrity Watch είναι μια διαδραστική πλατφόρμα ανοιχτών δεδομένων για την πολιτική ακεραιότητα. Απευθύνεται σε δημόσιες αρχές, σε δημοσιογράφους, οργανώσεις της κοινωνίας των πολιτών και στους πολίτες που ενδιαφέρονται να παρακολουθούν τις πηγές χρηματοδότησης της πολιτικής στην Ελλάδα.</p>
+                  <p>Το Integrity Watch είναι μια διαδραστική πλατφόρμα ανοιχτών διαδραστικών δεδομένων παρουσιάζοντας τα <a href="./index.php">έσοδα</a>, τα <a href="./financial.php">επενδυτικά προϊόντα & τις καταθέσεις</a> καθώς και τα <a href="./properties.php">ακίνητα</a> τα οποία οι Βουλευτές δήλωσαν στις δηλώσεις περιουσιακής τους κατάστασης το 2019 (χρήση 2018) με σκοπό να  λειτουργεί ως παρατηρητήριο Πολιτικής Ακεραιότητας. Απευθύνεται σε πολίτες, σε δημόσιες αρχές, σε δημοσιογράφους και οργανώσεις της κοινωνίας των πολιτών που επιθυμούν να παρακολουθούν τις πηγές χρηματοδότησης της πολιτικής στην Ελλάδα.</a>
                   <p><a href="/about.php">Δείτε περισσότερα</a></p>
                   <i class="material-icons close-btn" @click="showInfo = false">close</i>
                 </div>
@@ -130,7 +135,7 @@
               <div class="filter-count">0</div>από τους <strong class="total-count">0</strong> βουλευτές
             </div>
             <div class="dc-data-count count-box count-box-revenue">
-              <div class="filter-count">0</div>από τους <strong class="total-count">0</strong> δηλωμένα έσοδα
+              <div class="filter-count">0</div>από τα <strong class="total-count">0</strong> δηλωμένα έσοδα
             </div>
             <div class="footer-input">
               <input type="text" id="search-input" placeholder="Αναζήτηση">
@@ -147,7 +152,7 @@
         </div>
       </div>
       <!-- Loader -->
-      <loader v-if="loader" :text="'Loading ...'" />
+      <loader v-if="loader" :text="''" />
     </div>
 
     <script type="text/javascript" src="vendor/js/d3.v5.min.js"></script>

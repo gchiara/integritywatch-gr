@@ -46589,7 +46589,9 @@ exports.default = _default;
       _c("div", { staticClass: "loader" }),
       _vm._v(" "),
       _c("div", { staticClass: "loader-text below" }, [
-        _vm._v("\n      Please wait a moment for the data to load ...\n    ")
+        _vm._v(
+          "\n      Παρακαλούμε περιμένετε μια στιγμή να φορτωθούν τα δεδομένα\n    "
+        )
       ])
     ])
   ])
@@ -46817,7 +46819,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58642" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55250" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

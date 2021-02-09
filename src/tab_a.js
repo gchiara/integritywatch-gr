@@ -83,18 +83,18 @@ new Vue({
   methods: {
     //Share
     downloadDataset: function () {
-      window.open('./data/tab_b/parliament.csv');
+      window.open('./data/declarations.json');
     },
     share: function (platform) {
       if(platform == 'twitter'){
         var thisPage = window.location.href.split('?')[0];
-        var shareText = 'Share text here ' + thisPage;
+        var shareText = '' + thisPage;
         var shareURL = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText);
         window.open(shareURL, '_blank');
         return;
       }
       if(platform == 'facebook'){
-        var toShareUrl = 'https://integritywatch.si';
+        var toShareUrl = 'https://integritywatch.gr';
         var shareURL = 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(toShareUrl);
         window.open(shareURL, '_blank', 'toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250,top=300,left=300');
         return;
@@ -283,9 +283,11 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
         d.declaration = thisDec;
       }
       //Party name edit
+      /*
       if(d.Party_GR == "Κομμουνιστικό Κόμμα Ελλάδας") {
         d.Party_GR = "ΚΟΜΜΟΥΝΙΣΤΙΚΟ ΚΟΜΜΑ ΕΛΛΑΔΑΣ";
       }
+      */
       //Loop through declarations data to apply fixes and calculations
       if(d.declaration.id) {
         //Get tot and top revenues

@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>IW GR</title>
+    <title>Integrity Watch Greece - Επενδύσεις & Καταθέσεις</title>
     <!-- Add twitter and og meta here -->
+    <meta property="og:url" content="https://www.integritywatch.gr" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Integrity Watch Greece - Επενδύσεις & Καταθέσεις" />
+    <meta property="og:description" content="Οι επενδύσεις και οι Καταθέσεις των  Βουλευτών - Διαδραστικά γραφήματα ανοιχτών δεδομένων για τις επενδύσεις και τις καταθέσεις που δήλωσαν οι Έλληνες Βουλευτές στα Πόθεν Έσχες του 2019." />
+    <meta property="og:image" content="https://www.integritywatch.gr/images/thumbnail.png" />
     <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -20,15 +25,6 @@
           <!-- ROW FOR INFO AND SHARE -->
           <div class="col-md-12">
             <div class="row">
-              <!-- INFO -->
-              <div class="col-md-8 chart-col" v-if="showInfo">
-                <div class="boxed-container description-container">
-                  <h1>οικονομικά συμφέροντα και περιουσιακά στοιχεί</h1>
-                  <p>Lorem ipsum</p>
-                  <p><a href="/about.php">Δείτε περισσότερα</a></p>
-                  <i class="material-icons close-btn" @click="showInfo = false">close</i>
-                </div>
-              </div>
             </div>
           </div>
           <!-- CHARTS - FIRST ROW-->
@@ -68,8 +64,8 @@
                       <th class="header">Αρ.</th> 
                       <th class="header">Όνομα</th>
                       <th class="header">Πολιτικό κόμμα</th>
-                      <th class="header">Αριθμός επενδυτικών προϊόντων</th>
-                      <th class="header">Αριθμός τραπεζικής κατάθεσης</th>
+                      <th class="header">Αποτίμηση επενδυτικών προϊόντων</th>
+                      <th class="header">Ύψος καταθέσεων</th>
                       <th class="header">Ημερομηνία της δήλωσης</th>
                     </tr>
                   </thead>
@@ -98,13 +94,13 @@
                   <div class="col-md-12">
                     <div class="details-line"><span class="details-line-title">Σύνδεσμος Δήλωσης</span> </div>
                     <div class="details-line"><span class="details-line-title">Προφίλ:</span> <a :href="selectedElement.Link_DOI" target="_blank">{{ selectedElement.Link_DOI }}</a></div>
-                    <div class="details-line" v-if="selectedElement.declaration && selectedElement.declaration.companies"><span class="details-line-title">Προϊόντα επενδύσεων</span></div>
-                    <table class="modal-table" v-if="selectedElement.declaration && selectedElement.declaration.companies">
+                    <div class="details-line" v-if="selectedElement.declaration && selectedElement.declaration.ownInvestments"><span class="details-line-title">Προϊόντα επενδύσεων</span></div>
+                    <table class="modal-table" v-if="selectedElement.declaration && selectedElement.declaration.ownInvestments">
                       <thead>
                         <tr>
                           <th>ΕΠΕΝΔΥΤΗΣ</th>
                           <th>Τίτλος</th>
-                          <th>ΠΟΣΟΤΗΤΑ</th>
+                          <th>ΑΠΟΤΙΜΗΣΗ</th>
                           <th>ΑΞΙΑ ΚΤΗΣΗΣ</th>
                           <th>ΑΞΙΑ ΠΩΛΗΣΗΣ/ ΜΕΤΑΒΙΒΑΣΗΣ</th>
                           <th>ΝΟΜΙΣΜΑ</th>
@@ -113,11 +109,11 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="e in selectedElement.declaration.companies">
+                        <tr v-for="e in selectedElement.declaration.ownInvestments">
                           <td>{{ e.investor }}</td>
                           <td>{{ e.title }}</td>
-                          <td>{{ e.quantity }}</td>
-                          <td>{{ e.purchase_valuey }}</td>
+                          <td>{{ e.rating }}</td>
+                          <td>{{ e.purchase_value }}</td>
                           <td>{{ e.selling_value }}</td>
                           <td>{{ e.currency }}</td>
                           <td>{{ e.os_investor }}</td>
@@ -125,8 +121,8 @@
                         </tr>
                       </tbody>
                     </table>
-                    <div class="details-line" v-if="selectedElement.declaration && selectedElement.declaration.bankdeposits"><span class="details-line-title">Τραπεζικές καταθέσεις</span></div>
-                    <table class="modal-table" v-if="selectedElement.declaration && selectedElement.declaration.bankdeposits">
+                    <div class="details-line" v-if="selectedElement.declaration && selectedElement.declaration.ownDeposits"><span class="details-line-title">Τραπεζικές καταθέσεις</span></div>
+                    <table class="modal-table" v-if="selectedElement.declaration && selectedElement.declaration.ownDeposits">
                       <thead>
                         <tr>
                           <th>ΔΙΚΑΙΟΥΧΟΣ</th>
@@ -140,7 +136,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="e in selectedElement.declaration.bankdeposits">
+                        <tr v-for="e in selectedElement.declaration.ownDeposits">
                           <td>{{ e.beneficiary }}</td>
                           <td>{{ e.institution }}</td>
                           <td>{{ e.country }}</td>
@@ -167,10 +163,10 @@
               <div class="filter-count">0</div>από τους <strong class="total-count">0</strong> βουλευτές
             </div>
             <div class="dc-data-count count-box count-box-companies">
-              <div class="filter-count">0</div>από τους <strong class="total-count">0</strong> Προϊόντα επενδύσεων
+              <div class="filter-count">0</div>από τις <strong class="total-count">0</strong> επενδύσεις
             </div>
             <div class="dc-data-count count-box count-box-deposits">
-              <div class="filter-count">0</div>από τους <strong class="total-count">0</strong> Τραπεζικές καταθέσεις
+              <div class="filter-count">0</div>από τις <strong class="total-count">0</strong> Τραπεζικές καταθέσεις
             </div>
             <div class="footer-input">
               <input type="text" id="search-input" placeholder="Αναζήτηση">
@@ -187,7 +183,7 @@
         </div>
       </div>
       <!-- Loader -->
-      <loader v-if="loader" :text="'Loading ...'" />
+      <loader v-if="loader" :text="''" />
     </div>
 
     <script type="text/javascript" src="vendor/js/d3.v5.min.js"></script>

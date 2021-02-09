@@ -46584,7 +46584,9 @@ exports.default = _default;
       _c("div", { staticClass: "loader" }),
       _vm._v(" "),
       _c("div", { staticClass: "loader-text below" }, [
-        _vm._v("\n      Please wait a moment for the data to load ...\n    ")
+        _vm._v(
+          "\n      Παρακαλούμε περιμένετε μια στιγμή να φορτωθούν τα δεδομένα\n    "
+        )
       ])
     ])
   ])
@@ -46816,19 +46818,19 @@ new _vue.default({
   methods: {
     //Share
     downloadDataset: function downloadDataset() {
-      window.open('./data/tab_b/parliament.csv');
+      window.open('./data/declarations.json');
     },
     share: function share(platform) {
       if (platform == 'twitter') {
         var thisPage = window.location.href.split('?')[0];
-        var shareText = 'Share text here ' + thisPage;
+        var shareText = '' + thisPage;
         var shareURL = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText);
         window.open(shareURL, '_blank');
         return;
       }
 
       if (platform == 'facebook') {
-        var toShareUrl = 'https://integritywatch.si';
+        var toShareUrl = 'https://integritywatch.gr';
         var shareURL = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(toShareUrl);
         window.open(shareURL, '_blank', 'toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250,top=300,left=300');
         return;
@@ -47034,10 +47036,12 @@ var lobbyist_typeList = {};
         d.declaration = thisDec;
       } //Party name edit
 
-
-      if (d.Party_GR == "Κομμουνιστικό Κόμμα Ελλάδας") {
+      /*
+      if(d.Party_GR == "Κομμουνιστικό Κόμμα Ελλάδας") {
         d.Party_GR = "ΚΟΜΜΟΥΝΙΣΤΙΚΟ ΚΟΜΜΑ ΕΛΛΑΔΑΣ";
-      } //Loop through declarations data to apply fixes and calculations
+      }
+      */
+      //Loop through declarations data to apply fixes and calculations
 
 
       if (d.declaration.id) {
@@ -47450,7 +47454,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58642" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55250" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

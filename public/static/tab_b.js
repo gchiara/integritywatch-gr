@@ -46584,7 +46584,9 @@ exports.default = _default;
       _c("div", { staticClass: "loader" }),
       _vm._v(" "),
       _c("div", { staticClass: "loader-text below" }, [
-        _vm._v("\n      Please wait a moment for the data to load ...\n    ")
+        _vm._v(
+          "\n      Παρακαλούμε περιμένετε μια στιγμή να φορτωθούν τα δεδομένα\n    "
+        )
       ])
     ])
   ])
@@ -46768,19 +46770,19 @@ var vuedata = {
   charts: {
     party: {
       title: 'Πολιτικό κόμμα',
-      info: ''
+      info: 'Το γράφημα εμφανίζει τα επενδυτικά προϊόντα και τις καταθέσεις από τις δηλώσεις περιουσιακής κατάστασης των βουλευτών βάσει του κόμματος στο οποίο ανήκουν. Eπιλέγοντας ένα ή περισσότερα κόμματα μπορείτε να συγκρίνετε τα αντίστοιχα δεδομένα στα διπλανά γραφήματα.'
     },
     investments: {
-      title: 'Αριθμός επενδυτικών προϊόντων',
-      info: ''
+      title: 'Αποτίμηση επενδυτικών προϊόντων',
+      info: 'Το γράφημα εμφανίζει την  κατανομή της αποτίμησης των επενδυτικών προϊόντων των Βουλευτών σε πέντε κατηγορίες. Επιλέξτε μια ή περισσότερες κατηγορίες και τα διπλανά γραφήματα θα προσαρμοστούν αυτόματα.'
     },
     deposits: {
-      title: 'Αριθμός τραπεζικών καταθέσεων',
-      info: ''
+      title: 'Αξία τραπεζικών καταθέσεων',
+      info: 'Το γράφημα εμφανίζει την  κατανομή της αξίας των καταθέσεων των Βουλευτών σε πέντε κατηγορίες.Επιλέξτε μια ή περισσότερες κατηγορίες και τα διπλανά γραφήματα θα προσαρμοστούν αυτόματα.'
     },
     topInvestments: {
-      title: 'υψηλότερο εισόδημα - top 10',
-      info: ''
+      title: 'Υψηλότερες καταθέσεις - top 10',
+      info: 'Το γράφημα εμφανίζει τους 10 βουλευτές με την υψηλότερη αξία καταθέσεων'
     },
     mainTable: {
       chart: null,
@@ -46797,18 +46799,18 @@ var vuedata = {
   colors: {
     default1: "#2b90b8",
     investments: {
-      ">20": "#0d506b",
-      "10-20": "#0e6386",
-      "5-10": "#55aacb",
-      "1-5": "#a9d4e6",
-      "Δεν έχουν δηλωθεί επενδύσεις": "#ccc"
+      "> 500000€": "#0d506b",
+      "100000€ - 500000€": "#0e6386",
+      "50000€ - 100000€": "#55aacb",
+      "1€ - 50000€": "#a9d4e6",
+      "0€": "#ccc"
     },
     deposits: {
-      ">20": "#0d506b",
-      "10-20": "#0e6386",
-      "5-10": "#55aacb",
-      "1-5": "#a9d4e6",
-      "Δεν υπάρχουν τραπεζικές καταθέσεις": "#ccc"
+      "> 500000€": "#0d506b",
+      "100000€ - 500000€": "#0e6386",
+      "50000€ - 100000€": "#55aacb",
+      "1€ - 50000€": "#a9d4e6",
+      "0€": "#ccc"
     }
   } //Set vue components and Vue app
 
@@ -46824,19 +46826,19 @@ new _vue.default({
   methods: {
     //Share
     downloadDataset: function downloadDataset() {
-      window.open('./data/tab_b/parliament.csv');
+      window.open('./data/declarations.json');
     },
     share: function share(platform) {
       if (platform == 'twitter') {
         var thisPage = window.location.href.split('?')[0];
-        var shareText = 'Share text here ' + thisPage;
+        var shareText = '' + thisPage;
         var shareURL = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText);
         window.open(shareURL, '_blank');
         return;
       }
 
       if (platform == 'facebook') {
-        var toShareUrl = 'https://integritywatch.si';
+        var toShareUrl = 'https://integritywatch.gr';
         var shareURL = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(toShareUrl);
         window.open(shareURL, '_blank', 'toolbar=no,location=0,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=250,top=300,left=300');
         return;
@@ -47001,6 +47003,25 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
   "date-eu-desc": function dateEuDesc(a, b) {
     return a < b ? 1 : a > b ? -1 : 0;
   }
+});
+jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+  "euro-pre": function euroPre(val) {
+    console.log(val);
+
+    if (val == "/") {
+      val = -1;
+    } else {
+      val = parseFloat(val.replace(" €", "").replace("€", ""));
+    }
+
+    return val;
+  },
+  "euro-asc": function euroAsc(a, b) {
+    return a < b ? -1 : a > b ? 1 : 0;
+  },
+  "euro-desc": function euroDesc(a, b) {
+    return a < b ? 1 : a > b ? -1 : 0;
+  }
 }); //Generate random parameter for dynamic dataset loading (to avoid caching)
 
 var randomPar = '';
@@ -47027,52 +47048,73 @@ var lobbyist_typeList = {};
 
       if (thisDec) {
         d.declaration = thisDec;
-      } //Party name edit
-
-
-      if (d.Party_GR == "Κομμουνιστικό Κόμμα Ελλάδας") {
-        d.Party_GR = "ΚΟΜΜΟΥΝΙΣΤΙΚΟ ΚΟΜΜΑ ΕΛΛΑΔΑΣ";
       } //Loop through declarations data to apply fixes and calculations
 
 
       if (d.declaration.id) {
-        //Get investments
-        d.declaration.investmentsCategory = "Δεν έχουν δηλωθεί επενδύσεις";
+        //Get investments totals and save non-spouse ones
+        d.declaration.ownInvestments = [];
+        d.declaration.investmentsCategory = "0€";
+        var investmentsAmt = 0;
 
         if (d.declaration.companies) {
-          var investmentsAmt = d.declaration.companies.length;
-          iniTotCompanies += investmentsAmt;
+          _.each(d.declaration.companies, function (x, i) {
+            if (x.investor !== "ΣΥΖΥΓΟΣ") {
+              d.declaration.ownInvestments.push(x);
+
+              if (x.rating && x.rating !== "") {
+                var thisCleanedVal = parseFloat(x.rating.replace(".", "").replace(",", "."));
+                investmentsAmt += thisCleanedVal;
+              }
+            }
+          });
+
+          iniTotCompanies += d.declaration.ownInvestments.length;
+          d.investmentsAmtTot = investmentsAmt.toFixed(2);
 
           if (investmentsAmt == 0) {
-            d.declaration.investmentsCategory = "Δεν έχουν δηλωθεί επενδύσεις";
-          } else if (investmentsAmt <= 5) {
-            d.declaration.investmentsCategory = "1-5";
-          } else if (investmentsAmt <= 10) {
-            d.declaration.investmentsCategory = "5-10";
-          } else if (investmentsAmt <= 20) {
-            d.declaration.investmentsCategory = "10-20";
+            d.declaration.investmentsCategory = "0€";
+          } else if (investmentsAmt <= 50000) {
+            d.declaration.investmentsCategory = "1€ - 50000€";
+          } else if (investmentsAmt <= 100000) {
+            d.declaration.investmentsCategory = "50000€ - 100000€";
+          } else if (investmentsAmt <= 500000) {
+            d.declaration.investmentsCategory = "100000€ - 500000€";
           } else {
-            d.declaration.investmentsCategory = ">20";
+            d.declaration.investmentsCategory = "> 500000€";
           }
         } //Get bank deposits
 
 
-        d.declaration.depositsCategory = "Δεν υπάρχουν τραπεζικές καταθέσεις";
+        d.declaration.ownDeposits = [];
+        d.declaration.depositsCategory = "0€";
+        var depositsAmt = 0;
 
         if (d.declaration.bankdeposits) {
-          var depositsAmt = d.declaration.bankdeposits.length;
-          iniTotDeposits += depositsAmt;
+          _.each(d.declaration.bankdeposits, function (x) {
+            if (x.beneficiary !== "ΣΥΖΥΓΟΣ") {
+              d.declaration.ownDeposits.push(x);
+
+              if (x.amount && x.amount !== "") {
+                var thisCleanedVal = parseFloat(x.amount.replace(".", "").replace(",", "."));
+                depositsAmt += thisCleanedVal;
+              }
+            }
+          });
+
+          iniTotDeposits += d.declaration.ownDeposits.length;
+          d.depositsAmtTot = depositsAmt.toFixed(2);
 
           if (depositsAmt == 0) {
-            d.declaration.depositsCategory = "Δεν υπάρχουν τραπεζικές καταθέσεις";
-          } else if (depositsAmt <= 5) {
-            d.declaration.depositsCategory = "1-5";
-          } else if (depositsAmt <= 10) {
-            d.declaration.depositsCategory = "5-10";
-          } else if (depositsAmt <= 20) {
-            d.declaration.depositsCategory = "10-20";
+            d.declaration.depositsCategory = "0€";
+          } else if (depositsAmt <= 50000) {
+            d.declaration.depositsCategory = "1€ - 50000€";
+          } else if (depositsAmt <= 100000) {
+            d.declaration.depositsCategory = "50000€ - 100000€";
+          } else if (depositsAmt <= 500000) {
+            d.declaration.depositsCategory = "100000€ - 500000€";
           } else {
-            d.declaration.depositsCategory = ">20";
+            d.declaration.depositsCategory = "> 500000€";
           }
         }
       }
@@ -47123,13 +47165,13 @@ var lobbyist_typeList = {};
           return d.declaration.investmentsCategory;
         }
 
-        return "Δεν έχουν δηλωθεί επενδύσεις";
+        return "0€";
       });
       var group = dimension.group().reduceSum(function (d) {
         return 1;
       });
       var sizes = calcPieSize(charts.investments.divId);
-      var order = ["Δεν έχουν δηλωθεί επενδύσεις", "1-5", "5-10", "10-20", ">20"];
+      var order = ["0€", "1€ - 50000€", "50000€ - 100000€", "100000€ - 500000€", "> 500000€"];
       chart.width(sizes.width).height(sizes.height).cy(sizes.cy).innerRadius(sizes.innerRadius).radius(sizes.radius).legend(dc.legend().x(0).y(sizes.legendY).gap(10).legendText(function (d) {
         var thisKey = d.name;
 
@@ -47157,13 +47199,13 @@ var lobbyist_typeList = {};
           return d.declaration.depositsCategory;
         }
 
-        return "Δεν υπάρχουν τραπεζικές καταθέσεις";
+        return "0€";
       });
       var group = dimension.group().reduceSum(function (d) {
         return 1;
       });
       var sizes = calcPieSize(charts.deposits.divId);
-      var order = ["Δεν υπάρχουν τραπεζικές καταθέσεις", "1-5", "5-10", "10-20", ">20"];
+      var order = ["0€", "1€ - 50000€", "50000€ - 100000€", "100000€ - 500000€", "> 500000€"];
       chart.width(sizes.width).height(sizes.height).cy(sizes.cy).innerRadius(sizes.innerRadius).radius(sizes.radius).legend(dc.legend().x(0).y(sizes.legendY).gap(10).legendText(function (d) {
         var thisKey = d.name;
 
@@ -47190,8 +47232,8 @@ var lobbyist_typeList = {};
         return d.First_name + ' ' + d.Last_name;
       });
       var group = dimension.group().reduceSum(function (d) {
-        if (d.declaration.bankdeposits) {
-          return d.declaration.bankdeposits.length;
+        if (d.depositsAmtTot) {
+          return d.depositsAmtTot;
         } else {
           return 0;
         }
@@ -47262,9 +47304,10 @@ var lobbyist_typeList = {};
           "orderable": true,
           "targets": 3,
           "defaultContent": "N/A",
+          "type": "euro",
           "data": function data(d) {
-            if (d.declaration.companies) {
-              return d.declaration.companies.length;
+            if (d.investmentsAmtTot) {
+              return d.investmentsAmtTot + " €";
             }
 
             return "/";
@@ -47274,9 +47317,10 @@ var lobbyist_typeList = {};
           "orderable": true,
           "targets": 4,
           "defaultContent": "N/A",
+          "type": "euro",
           "data": function data(d) {
-            if (d.declaration.bankdeposits) {
-              return d.declaration.bankdeposits.length;
+            if (d.depositsAmtTot) {
+              return d.depositsAmtTot + " €";
             }
 
             return "/";
@@ -47409,12 +47453,12 @@ var lobbyist_typeList = {};
           return p;
         }
 
-        if (d.declaration.companies) {
-          p.companies += +d.declaration.companies.length;
+        if (d.declaration.ownInvestments) {
+          p.companies += +d.declaration.ownInvestments.length;
         }
 
-        if (d.declaration.bankdeposits) {
-          p.deposits += +d.declaration.bankdeposits.length;
+        if (d.declaration.ownDeposits) {
+          p.deposits += +d.declaration.ownDeposits.length;
         }
 
         return p;
@@ -47425,12 +47469,12 @@ var lobbyist_typeList = {};
           return p;
         }
 
-        if (d.declaration.companies) {
-          p.companies -= d.declaration.companies.length;
+        if (d.declaration.ownInvestments) {
+          p.companies -= d.declaration.ownInvestments.length;
         }
 
-        if (d.declaration.bankdeposits) {
-          p.deposits -= d.declaration.bankdeposits.length;
+        if (d.declaration.ownDeposits) {
+          p.deposits -= d.declaration.ownDeposits.length;
         }
 
         return p;
@@ -47505,7 +47549,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58642" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55250" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
