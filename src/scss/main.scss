@@ -726,10 +726,11 @@ table.dataTable tbody tr:hover {
   .modal-table-title {
     font-weight: 600;
     text-align: left;
-    margin: 10px 0 10px 0;
+    margin: 10px 0 15px 0;
   }
   .modal-table {
     width: 100%;
+    margin: 10px 0 10px 0;
     thead {
       tr {
         th {
@@ -794,5 +795,43 @@ table.dataTable tbody tr:hover {
       }
     }
   }
+}
+.tabC {
+  .chart-table {
+    td, th {
+      &:nth-child(7) {
+        @media only screen and (max-width: 1024px) {
+          display: none;
+        }
+      }
+      &:nth-child(3) {
+        @media only screen and (max-width: 768px) {
+          display: none;
+        }
+      }
+    }
+  }
+}
+.tabD {
+  .chart-table {
+    td, th {
+      &:nth-child(5), &:nth-child(6) {
+        @media only screen and (max-width: 768px) {
+          display: none;
+        }
+      }
+    }
+  }
+}
+.chart-table {
+  td, th {
+    &:nth-child(1) {
+      width: 60px;
+    }
+  }
+}
+
+.modal-table-container {
+  overflow-x: auto;
 }
 

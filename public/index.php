@@ -100,26 +100,28 @@
                     <div class="details-line"><span class="details-line-title">Προφίλ:</span> {{ selectedElement.Link_DOI }}</div>
                     <div class="details-line" v-if="selectedElement.declaration"><span class="details-line-title">Σύνολο δηλωθέντων εσόδων</span> {{ selectedElement.declaration.totRevenue }}</div>
                     <div class="details-line" v-if="selectedElement.declaration"><span class="details-line-title">Έσοδα που δηλώθηκαν από σύζυγο</span> {{ selectedElement.declaration.totRevenueSpouse }}</div>
-                    <table class="modal-table" v-if="selectedElement.declaration">
-                      <thead>
-                        <tr>
-                          <th>Ο ΑΠΟΚΤΩΝ ΤΟ ΕΙΣΟΔΗΜΑ</th>
-                          <th>ΕΙΔΟΣ ΕΙΣΟΔΟΥ</th>
-                          <th>ΠΟΣΟ</th>
-                          <th>ΝΟΜΙΣΜΑ</th>
-                          <th>ΠΑΡΑΤΗΡΗΣΕΙΣ</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="rev in selectedElement.declaration.ownRevenues">
-                          <td>{{ rev.receipt }}</td>
-                          <td>{{ rev.type }}</td>
-                          <td>{{ rev.amount }}</td>
-                          <td>{{ rev.currency }}</td>
-                          <td>{{ rev.comments }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div class="modal-table-container">
+                      <table class="modal-table" v-if="selectedElement.declaration">
+                        <thead>
+                          <tr>
+                            <th>Ο ΑΠΟΚΤΩΝ ΤΟ ΕΙΣΟΔΗΜΑ</th>
+                            <th>ΕΙΔΟΣ ΕΙΣΟΔΟΥ</th>
+                            <th>ΠΟΣΟ</th>
+                            <th>ΝΟΜΙΣΜΑ</th>
+                            <th>ΠΑΡΑΤΗΡΗΣΕΙΣ</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="rev in selectedElement.declaration.ownRevenues">
+                            <td>{{ rev.receipt }}</td>
+                            <td>{{ rev.type }}</td>
+                            <td>{{ rev.amount }}</td>
+                            <td>{{ rev.currency }}</td>
+                            <td>{{ rev.comments }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>

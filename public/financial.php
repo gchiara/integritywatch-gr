@@ -95,59 +95,63 @@
                     <div class="details-line"><span class="details-line-title">Σύνδεσμος Δήλωσης</span> </div>
                     <div class="details-line"><span class="details-line-title">Προφίλ:</span> <a :href="selectedElement.Link_DOI" target="_blank">{{ selectedElement.Link_DOI }}</a></div>
                     <div class="details-line" v-if="selectedElement.declaration && selectedElement.declaration.ownInvestments"><span class="details-line-title">Προϊόντα επενδύσεων</span></div>
-                    <table class="modal-table" v-if="selectedElement.declaration && selectedElement.declaration.ownInvestments">
-                      <thead>
-                        <tr>
-                          <th>ΕΠΕΝΔΥΤΗΣ</th>
-                          <th>Τίτλος</th>
-                          <th>ΑΠΟΤΙΜΗΣΗ</th>
-                          <th>ΑΞΙΑ ΚΤΗΣΗΣ</th>
-                          <th>ΑΞΙΑ ΠΩΛΗΣΗΣ/ ΜΕΤΑΒΙΒΑΣΗΣ</th>
-                          <th>ΝΟΜΙΣΜΑ</th>
-                          <th>ΧΕΙΡΙΣΤΗΣ ΜΕΡΙΔΑΣ ΕΠΕΝΔΥΤΗ</th>
-                          <th>ΠΑΡΑΤΗΡΗΣΕΙΣ</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="e in selectedElement.declaration.ownInvestments">
-                          <td>{{ e.investor }}</td>
-                          <td>{{ e.title }}</td>
-                          <td>{{ e.rating }}</td>
-                          <td>{{ e.purchase_value }}</td>
-                          <td>{{ e.selling_value }}</td>
-                          <td>{{ e.currency }}</td>
-                          <td>{{ e.os_investor }}</td>
-                          <td>{{ e.comments }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div class="modal-table-container">
+                      <table class="modal-table" v-if="selectedElement.declaration && selectedElement.declaration.ownInvestments">
+                        <thead>
+                          <tr>
+                            <th>ΕΠΕΝΔΥΤΗΣ</th>
+                            <th>Τίτλος</th>
+                            <th>ΑΠΟΤΙΜΗΣΗ</th>
+                            <th>ΑΞΙΑ ΚΤΗΣΗΣ</th>
+                            <th>ΑΞΙΑ ΠΩΛΗΣΗΣ/ ΜΕΤΑΒΙΒΑΣΗΣ</th>
+                            <th>ΝΟΜΙΣΜΑ</th>
+                            <th>ΧΕΙΡΙΣΤΗΣ ΜΕΡΙΔΑΣ ΕΠΕΝΔΥΤΗ</th>
+                            <th>ΠΑΡΑΤΗΡΗΣΕΙΣ</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="e in selectedElement.declaration.ownInvestments">
+                            <td>{{ e.investor }}</td>
+                            <td>{{ e.title }}</td>
+                            <td>{{ e.rating }}</td>
+                            <td>{{ e.purchase_value }}</td>
+                            <td>{{ e.selling_value }}</td>
+                            <td>{{ e.currency }}</td>
+                            <td>{{ e.os_investor }}</td>
+                            <td>{{ e.comments }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                     <div class="details-line" v-if="selectedElement.declaration && selectedElement.declaration.ownDeposits"><span class="details-line-title">Τραπεζικές καταθέσεις</span></div>
-                    <table class="modal-table" v-if="selectedElement.declaration && selectedElement.declaration.ownDeposits">
-                      <thead>
-                        <tr>
-                          <th>ΔΙΚΑΙΟΥΧΟΣ</th>
-                          <th>ΠΙΣΤΩΤΙΚΟ ΙΔΡΥΜΑ</th>
-                          <th>ΧΩΡΑ</th>
-                          <th>ΑΞΙΑ ΚΤΗΣΗΣ</th>
-                          <th>ΕΙΔΟΣ ΛΟΓΑΡΙΑΣΜΟΥ / ΚΑΤΑΘΕΣΗΣ</th>
-                          <th>ΠΟΣΟ</th>
-                          <th>ΝΟΜΙΣΜΑ</th>
-                          <th>ΠΑΡΑΤΗΡΗΣΕΙΣ</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="e in selectedElement.declaration.ownDeposits">
-                          <td>{{ e.beneficiary }}</td>
-                          <td>{{ e.institution }}</td>
-                          <td>{{ e.country }}</td>
-                          <td>{{ e.account_type }}</td>
-                          <td>{{ e.amount }}</td>
-                          <td>{{ e.currency }}</td>
-                          <td>{{ e.origin }}</td>
-                          <td>{{ e.comments }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div class="modal-table-container">
+                      <table class="modal-table" v-if="selectedElement.declaration && selectedElement.declaration.ownDeposits">
+                        <thead>
+                          <tr>
+                            <th>ΔΙΚΑΙΟΥΧΟΣ</th>
+                            <th>ΠΙΣΤΩΤΙΚΟ ΙΔΡΥΜΑ</th>
+                            <th>ΧΩΡΑ</th>
+                            <th>ΑΞΙΑ ΚΤΗΣΗΣ</th>
+                            <th>ΕΙΔΟΣ ΛΟΓΑΡΙΑΣΜΟΥ / ΚΑΤΑΘΕΣΗΣ</th>
+                            <th>ΠΟΣΟ</th>
+                            <th>ΝΟΜΙΣΜΑ</th>
+                            <th>ΠΑΡΑΤΗΡΗΣΕΙΣ</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="e in selectedElement.declaration.ownDeposits">
+                            <td>{{ e.beneficiary }}</td>
+                            <td>{{ e.institution }}</td>
+                            <td>{{ e.country }}</td>
+                            <td>{{ e.account_type }}</td>
+                            <td>{{ e.amount }}</td>
+                            <td>{{ e.currency }}</td>
+                            <td>{{ e.origin }}</td>
+                            <td>{{ e.comments }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>

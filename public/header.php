@@ -14,6 +14,9 @@
       <li class="nav-item">
         <a href="./properties.php" class="nav-link" :class="{active: page == 'tabC'}">Ακίνητα</a>
       </li>
+      <li class="nav-item">
+        <a href="./loans.php" class="nav-link" :class="{active: page == 'tabD'}">Δάνεια</a>
+      </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Άλλες χώρες 
