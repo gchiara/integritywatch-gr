@@ -309,8 +309,34 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
     var loans = [];
     var iniTotLoans = 0;
     _.each(mps, function (d) {
+      //Prepare the needed parameters that we had in the old list
+      d.ID = '';
+      if(d.Link_DOI !== '') {
+        d.ID = d.Link_DOI.split('/').slice(-1)[0].replace('.pdf','');
+      }
+      /*
+      d.Party_EN = '';
+      d.Party_GR = '';
+      if(d.Τitle.split('-').length > 1) {
+        var partyString = d.Τitle.split('-')[1];
+        d.Party_EN = partyString.split('(')[0].trim();
+        if(partyString.indexOf('(') > -1) {
+          d.Party_GR = partyString.split('(')[1].replace(')','').trim();
+        }
+      }
+      */
+      if(d.Party_GR == 'ΜΕΡΑ25' || d.Party_GR == 'Μέρα25' || d.Party_GR == 'ΜΕΡΑ 25') {
+        d.Party_GR = 'ΜΕΡΑ25';
+      }
+      if(d.Party_GR == 'Δημοκρατική Συμπαράταξη' || d.Party_GR == 'Δημκρατική Συμπαράταξη' || d.Party_GR == 'Δημοκρατκή Συμπαράταξη') {
+        d.Party_GR = 'Δημοκρατική Συμπαράταξη';
+      }
+      if(d.Party_GR == 'Νέα Δημοκαρτία') {
+        d.Party_GR = 'Νέα Δημοκρατία';
+      }
+      //Find declarations
       d.declaration = {};
-      var thisDec = _.find(declarations, function (dec) { return dec.id == d.ID });
+      var thisDec = _.find(declarations, function (dec) { return dec.urlString == d.ID });
       if(thisDec) {
         d.declaration = thisDec;
       }
@@ -348,15 +374,21 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
         } else if(d.loansTotOriginalAmount >= 500000) {
           d.loansTotCategory = ">= 500.000€";
         }
+      } else {
+        d.declaration.loans = [];
+        d.loansNum = 0;
+        d.loansTotOriginalAmount = 0;
+        d.loansTotBalanceObliged = 0;
+        d.loansTypes = [];
       }
     });
 
-    console.log(loans);
+    //console.log(loans);
     //Set dc main vars. The second crossfilter is used to handle the travels stacked bar chart.
     var ndx = crossfilter(mps);
     var ndxLoans = crossfilter(loans);
     var searchDimension = ndx.dimension(function (d) {
-        var entryString = ' ' + d.Last_name.toLowerCase() + ' ' + d.First_name.toLowerCase();
+        var entryString = ' ' + d.Fullname_GR;
         return entryString.toLowerCase();
     });
     var idDimension = ndx.dimension(function (d) {
@@ -486,7 +518,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
     var createTopMpsChart = function() {
       var chart = charts.topMps.chart;
       var dimension = ndx.dimension(function (d) {
-        return d.First_name + ' ' + d.Last_name;
+        return d.Fullname_GR;
       });
       var group = dimension.group().reduceSum(function (d) {
         if(d.loansTotBalanceObliged) {
@@ -550,7 +582,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
             "defaultContent":"N/A",
             "data": function(d) {
               //id,function,party,institution,date,contact_type,org_name,lobbyist_type,purpose,purpose_details
-              return d.First_name + ' ' + d.Last_name;
+              return d.Fullname_GR;
             }
           },
           {
@@ -594,7 +626,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
         "bPaginate": true,
         "bLengthChange": true,
         "bFilter": false,
-        "order": [[ 1, "desc" ]],
+        "order": [[ 1, "asc" ]],
         "bSort": true,
         "bInfo": true,
         "bAutoWidth": false,
@@ -694,12 +726,12 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
 
     function drawCustomCounters() {
       var dim = ndx.dimension (function(d) {
-        return d.Last_name;
+        return d.Fullname_GR;
       });
       var group = dim.group().reduce(
         function(p,d) {  
           p.nb +=1;
-          if (!d.Last_name || !d.declaration) {
+          if (!d.Fullname_GR || !d.declaration) {
             return p;
           }
           if(d.loansNum) { p.loans += +d.loansNum; }
@@ -707,7 +739,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
         },
         function(p,d) {  
           p.nb -=1;
-          if (!d.Last_name || !d.declaration) {
+          if (!d.Fullname_GR || !d.declaration) {
             return p;
           }
           if(d.loansNum) { p.loans -= d.loansNum;}

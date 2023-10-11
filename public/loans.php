@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Quicksand:500" rel="stylesheet">
-    <link rel="stylesheet" href="static/tab_d.css">
+    <link rel="stylesheet" href="static/tab_d.css?v=2">
 </head>
 <body>
     <div id="app" class="tabD">   
@@ -81,7 +81,7 @@
             <!-- Modal Header -->
             <div class="modal-header">
               <div class="modal-title">
-                <div>{{ selectedElement.First_name }} {{ selectedElement.Last_name }}</div>
+                <div>{{ selectedElement.Fullname_GR }}</div>
                 <div>{{ selectedElement.Party_GR }}</div>
               </div>
               <button type="button" class="close" data-dismiss="modal"><i class="material-icons">close</i></button>
@@ -92,7 +92,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="details-line"><span class="details-line-title">Σύνδεσμος Δήλωσης</span> </div>
-                    <div class="details-line"><span class="details-line-title"><a :href="selectedElement.Link_DOI" target="_blank">Προφίλ</a></span></div>
+                    <div class="details-line" v-if="selectedElement.Link_DOI && selectedElement.Link_DOI !== ''"><span class="details-line-title">Προφίλ:</span><a :href="selectedElement.Link_DOI" target="_blank"> {{ selectedElement.Link_DOI.split('/').pop() }}</a></div>
                     <div class="details-line" v-if="selectedElement.declaration && selectedElement.declaration.ownProperty1"><span class="details-line-title">Property1</span></div>
                     <div class="modal-table-container">
                       <table class="modal-table" v-if="selectedElement.declaration && selectedElement.declaration.loans && selectedElement.declaration.loans.length > 0">
@@ -162,7 +162,7 @@
     <script type="text/javascript" src="vendor/js/crossfilter.min.js"></script>
     <script type="text/javascript" src="vendor/js/dc.js"></script>
     <script type="text/javascript" src="vendor/js/dc.cloud.js"></script>
-    <script src="static/tab_d.js"></script>
+    <script src="static/tab_d.js?v=2"></script>
 
  
 </body>

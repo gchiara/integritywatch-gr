@@ -835,3 +835,17 @@ table.dataTable tbody tr:hover {
   overflow-x: auto;
 }
 
+/* DC legend vertical alignment fix */
+.dc-legend{
+  .dc-legend-item {
+    rect  {
+      y: -5px !important;
+    }
+    @supports (-moz-appearance:none) {
+      rect  {
+        y: 0px !important;
+      }
+    }
+  }
+}
+

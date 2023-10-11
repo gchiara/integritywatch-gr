@@ -87,6 +87,8 @@ var vuedata = {
     "Η ΣΤΕΓΗ /  ΚΑΤΑΣΤΗΜΑ":"ΕΠΑΓΓΕΛΜΑΤΙΚ Η ΣΤΕΓΗ /  ΚΑΤΑΣΤΗΜΑ",
     "ΔΕΝΔΡΟΚΑΛΛΙ":"ΔΕΝΔΡΟΚΑΛΛΙ ΕΡΓΕΙΑ",
     "ΕΡΓΕΙΑ":"ΕΡΓΕΙΑ",
+    "ΑΛΛΟΣ  ΒΟΗΘΗΤΙΚΟΣ  ΧΩΡΟΣ": "ΑΛΛΟΣ  ΒΟΗΘΗΤΙΚΟΣ  ΧΩΡΟΣ",
+    "ΑΛΛΗ ΠΕΡΙΠΤΩΣΗ": "ΑΛΛΗ ΠΕΡΙΠΤΩΣΗ",
     "":"Δεν αναφέρεται"
   },
   colors: {
@@ -312,13 +314,36 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
     var iniTotBusinesses = 0;
     var propertyTypes = [];
     _.each(mps, function (d) {
+      //Prepare the needed parameters that we had in the old list
+      d.ID = '';
+      if(d.Link_DOI !== '') {
+        d.ID = d.Link_DOI.split('/').slice(-1)[0].replace('.pdf','');
+      }
+      /*
+      d.Party_EN = '';
+      d.Party_GR = '';
+      if(d.Τitle.split('-').length > 1) {
+        var partyString = d.Τitle.split('-')[1];
+        d.Party_EN = partyString.split('(')[0].trim();
+        if(partyString.indexOf('(') > -1) {
+          d.Party_GR = partyString.split('(')[1].replace(')','').trim();
+        }
+      }
+      */
+      if(d.Party_GR == 'ΜΕΡΑ25' || d.Party_GR == 'Μέρα25' || d.Party_GR == 'ΜΕΡΑ 25') {
+        d.Party_GR = 'ΜΕΡΑ25';
+      }
+      if(d.Party_GR == 'Δημοκρατική Συμπαράταξη' || d.Party_GR == 'Δημκρατική Συμπαράταξη' || d.Party_GR == 'Δημοκρατκή Συμπαράταξη') {
+        d.Party_GR = 'Δημοκρατική Συμπαράταξη';
+      }
+      if(d.Party_GR == 'Νέα Δημοκαρτία') {
+        d.Party_GR = 'Νέα Δημοκρατία';
+      }
+      //Find declarations
       d.declaration = {};
-      var thisDec = _.find(declarations, function (dec) { return dec.id == d.ID });
+      var thisDec = _.find(declarations, function (dec) { return dec.urlString == d.ID });
       if(thisDec) {
         d.declaration = thisDec;
-      }
-      if(d.ID == "1473587") {
-        console.log(d.declaration);
       }
       d.propertyTypes = [];
       //Loop through declarations data to apply fixes and calculations
@@ -330,11 +355,31 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
           var propertiesToKeep = [];
           d.declaration.ownProperty1 = [];
           d.declaration.ownProperty2 = [];
+          //In some cases it might have happened that the same row got split between 2 pdf pages, let's see if we can merge them
+          var fixedPropertyEntries = [];
+          var indexesToSkip = [];
+          _.each(d.declaration.property1, function (x, i) {
+            if((x.type == "ΜΟΝΟΚΑΤΟΙΚΙ" && d.declaration.property1[i+1].type == "Α") || (x.type == "ΑΛΛΗ" && d.declaration.property1[i+1].type == "ΠΕΡΙΠΤΩΣΗ")) {
+              var rowToMerge = d.declaration.property1[i+1];
+              _.each(rowToMerge, function (xVal, xKey) {
+                x[xKey] = x[xKey] + ' ' + rowToMerge[xKey];
+              });
+              indexesToSkip.push(i+1);
+            }
+            if(indexesToSkip.indexOf(i) == -1) {
+              fixedPropertyEntries.push(x);
+            }
+          });
+          d.declaration.property1 = fixedPropertyEntries;
+          //End of row merging fix
           _.each(d.declaration.property1, function (x, i) {
             x.streamlinedType = vuedata.typeStreamlined[x.type];
             d.propertyTypes.push(x.streamlinedType);
             if(!x.streamlinedType) {
               console.log(x.type);
+              console.log(x);
+              console.log(d.declaration.property1[i+1]);
+              console.log(d);
             }
             if(x.holder !== "ΣΥΖΥΓΟΣ") {
               propertiesToKeep.push(x.aa.replace("  "," "));
@@ -386,7 +431,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
     //Set dc main vars. The second crossfilter is used to handle the travels stacked bar chart.
     var ndx = crossfilter(mps);
     var searchDimension = ndx.dimension(function (d) {
-        var entryString = ' ' + d.Last_name.toLowerCase() + ' ' + d.First_name.toLowerCase();
+        var entryString = ' ' + d.Fullname_GR;
         return entryString.toLowerCase();
     });
 
@@ -403,7 +448,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
       var charsLength = recalcCharsLength(width);
       chart
         .width(width)
-        .height(500)
+        .height(510)
         .margins({top: 0, left: 0, right: 0, bottom: 20})
         .group(group)
         .dimension(dimension)
@@ -507,7 +552,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
     var createTopPropertiesChart = function() {
       var chart = charts.topProperties.chart;
       var dimension = ndx.dimension(function (d) {
-        return d.First_name + ' ' + d.Last_name;
+        return d.Fullname_GR;
       });
       var group = dimension.group().reduceSum(function (d) {
         if(d.propertiesAmt) {
@@ -529,7 +574,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
       var charsLength = recalcCharsLength(width);
       chart
         .width(width)
-        .height(490)
+        .height(510)
         .margins({top: 0, left: 0, right: 0, bottom: 20})
         .group(filteredGroup)
         .dimension(dimension)
@@ -564,7 +609,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
       var charsLength = recalcCharsLength(width);
       chart
         .width(width)
-        .height(500)
+        .height(510)
         .margins({top: 0, left: 0, right: 0, bottom: 20})
         .group(group)
         .dimension(dimension)
@@ -606,7 +651,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
             "defaultContent":"N/A",
             "data": function(d) {
               //id,function,party,institution,date,contact_type,org_name,lobbyist_type,purpose,purpose_details
-              return d.First_name + ' ' + d.Last_name;
+              return d.Fullname_GR;
             }
           },
           {
@@ -658,7 +703,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
         "bPaginate": true,
         "bLengthChange": true,
         "bFilter": false,
-        "order": [[ 1, "desc" ]],
+        "order": [[ 1, "asc" ]],
         "bSort": true,
         "bInfo": true,
         "bAutoWidth": false,
@@ -735,10 +780,11 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
     //Render charts
     createPartyChart();
     createPropertiesChart();
-    //createBusinessesChart();
     createTopPropertiesChart();
     createTypesChart();
     createTable();
+
+    //createBusinessesChart();
 
     $('.dataTables_wrapper').append($('.dataTables_length'));
 
@@ -759,12 +805,12 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
 
     function drawCustomCounters() {
       var dim = ndx.dimension (function(d) {
-        return d.Last_name;
+        return d.Fullname_GR;
       });
       var group = dim.group().reduce(
         function(p,d) {  
           p.nb +=1;
-          if (!d.Last_name || !d.declaration) {
+          if (!d.Fullname_GR || !d.declaration) {
             return p;
           }
           if(d.propertiesAmt) { p.properties += +d.propertiesAmt; }
@@ -773,7 +819,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
         },
         function(p,d) {  
           p.nb -=1;
-          if (!d.Last_name || !d.declaration) {
+          if (!d.Fullname_GR || !d.declaration) {
             return p;
           }
           if(d.propertiesAmt) { p.properties -= d.propertiesAmt;}

@@ -277,8 +277,35 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
     //Loop through list to get declaration
     var iniTotReveue = 0;
     _.each(mps, function (d) {
+      //Prepare the needed parameters that we had in the old list
+      d.ID = '';
+      if(d.Link_DOI !== '') {
+        d.ID = d.Link_DOI.split('/').slice(-1)[0].replace('.pdf','');
+      }
+      /*
+      d.Party_EN = '';
+      d.Party_GR = '';
+      if(d.Τitle.split('-').length > 1) {
+        var partyString = d.Τitle.split('-')[1];
+        d.Party_EN = partyString.split('(')[0].trim();
+        if(partyString.indexOf('(') > -1) {
+          d.Party_GR = partyString.split('(')[1].replace(')','').trim();
+        }
+      }
+      */
+      if(d.Party_GR == 'ΜΕΡΑ25' || d.Party_GR == 'Μέρα25' || d.Party_GR == 'ΜΕΡΑ 25') {
+        d.Party_GR = 'ΜΕΡΑ25';
+      }
+      if(d.Party_GR == 'Δημοκρατική Συμπαράταξη' || d.Party_GR == 'Δημκρατική Συμπαράταξη' || d.Party_GR == 'Δημοκρατκή Συμπαράταξη') {
+        d.Party_GR = 'Δημοκρατική Συμπαράταξη';
+      }
+      if(d.Party_GR == 'Νέα Δημοκαρτία') {
+        d.Party_GR = 'Νέα Δημοκρατία';
+      }
+      //Find declarations
       d.declaration = {};
-      var thisDec = _.find(declarations, function (dec) { return dec.id == d.ID });
+      var thisDec = _.find(declarations, function (dec) { return dec.urlString == d.ID });
+      if(d.ID == 'FOTILAS_IASON_2040456_2021') { console.log(thisDec);}
       if(thisDec) {
         d.declaration = thisDec;
       }
@@ -308,6 +335,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
             d.declaration.totRevenueSpouse += parseAmount(r.amount);
           }
         });
+        d.declaration.totRevenueSpouse = d.declaration.totRevenueSpouse.toFixed(2);
         d.declaration.totRevenue = d.declaration.totRevenue.toFixed(2);
         d.declaration.newestDecDate = "/";
         //Get income category
@@ -318,10 +346,10 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
     });
   
 
-    //Set dc main vars. The second crossfilter is used to handle the travels stacked bar chart.
+    //Set dc main vars. 
     var ndx = crossfilter(mps);
     var searchDimension = ndx.dimension(function (d) {
-        var entryString = ' ' + d.Last_name.toLowerCase() + ' ' + d.First_name.toLowerCase();
+        var entryString = ' ' + d.Fullname_GR;
         return entryString.toLowerCase();
     });
 
@@ -404,7 +432,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
     var createTopRevenueChart = function() {
       var chart = charts.topRevenue.chart;
       var dimension = ndx.dimension(function (d) {
-        return d.First_name + ' ' + d.Last_name;
+        return d.Fullname_GR;
       });
       var group = dimension.group().reduceSum(function (d) {
         if(d.declaration.totRevenue) {
@@ -467,8 +495,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
             "targets": 1,
             "defaultContent":"N/A",
             "data": function(d) {
-              //id,function,party,institution,date,contact_type,org_name,lobbyist_type,purpose,purpose_details
-              return d.First_name + ' ' + d.Last_name;
+              return d.Fullname_GR;
             }
           },
           {
@@ -530,7 +557,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
         "bPaginate": true,
         "bLengthChange": true,
         "bFilter": false,
-        "order": [[ 1, "desc" ]],
+        "order": [[ 1, "asc" ]],
         "bSort": true,
         "bInfo": true,
         "bAutoWidth": false,
@@ -631,12 +658,12 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
 
     function drawRevenueCounter() {
       var dim = ndx.dimension (function(d) {
-        return d.Last_name;
+        return d.Fullname_GR;
       });
       var group = dim.group().reduce(
         function(p,d) {  
           p.nb +=1;
-          if (!d.Last_name || !d.declaration.totRevenue) {
+          if (!d.Fullname_GR || !d.declaration.totRevenue) {
             return p;
           }
           p.revenue += +d.declaration.totRevenue;
@@ -644,7 +671,7 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
         },
         function(p,d) {  
           p.nb -=1;
-          if (!d.Last_name || !d.declaration.totRevenue) {
+          if (!d.Fullname_GR || !d.declaration.totRevenue) {
             return p;
           }
           p.revenue -= d.declaration.totRevenue;
@@ -656,7 +683,6 @@ csv('./data/mp-list.csv?' + randomPar, (err, mps) => {
       );
       group.order(function(p){ return p.nb });
       var revenue = 0;
-
       var counter = dc.dataCount(".count-box-revenue")
       .dimension(group)
       .group({value: function() {

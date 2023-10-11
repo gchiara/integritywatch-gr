@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Quicksand:500" rel="stylesheet">
-    <link rel="stylesheet" href="static/tab_a.css">
+    <link rel="stylesheet" href="static/tab_a.css?v=2">
 </head>
 <body>
     <div id="app" class="tabC">   
@@ -29,7 +29,7 @@
               <div class="col-md-8 chart-col" v-if="showInfo">
                 <div class="boxed-container description-container">
                   <h1>Πολιτική ακεραιότητα και ανοιχτά δεδομένα</h1>
-                  <p>Το Integrity Watch είναι μια διαδραστική πλατφόρμα ανοιχτών διαδραστικών δεδομένων παρουσιάζοντας τα <a href="./index.php">έσοδα</a>, τα <a href="./financial.php">επενδυτικά προϊόντα & τις καταθέσεις</a> καθώς και τα <a href="./properties.php">ακίνητα</a> τα οποία οι Βουλευτές δήλωσαν στις δηλώσεις περιουσιακής τους κατάστασης το 2019 (χρήση 2018) με σκοπό να  λειτουργεί ως παρατηρητήριο Πολιτικής Ακεραιότητας. Απευθύνεται σε πολίτες, σε δημόσιες αρχές, σε δημοσιογράφους και οργανώσεις της κοινωνίας των πολιτών που επιθυμούν να παρακολουθούν τις πηγές χρηματοδότησης της πολιτικής στην Ελλάδα.</a>
+                  <p>Το Integrity Watch είναι μια διαδραστική πλατφόρμα ανοιχτών διαδραστικών δεδομένων παρουσιάζοντας τα <a href="./index.php">έσοδα</a>, τα <a href="./financial.php">επενδυτικά προϊόντα & τις καταθέσεις</a> καθώς και τα <a href="./properties.php">ακίνητα</a> τα οποία οι Βουλευτές δήλωσαν στις δηλώσεις περιουσιακής τους κατάστασης το 2022 (χρήση 2021) με σκοπό να  λειτουργεί ως παρατηρητήριο Πολιτικής Ακεραιότητας. Απευθύνεται σε πολίτες, σε δημόσιες αρχές, σε δημοσιογράφους και οργανώσεις της κοινωνίας των πολιτών που επιθυμούν να παρακολουθούν τις πηγές χρηματοδότησης της πολιτικής στην Ελλάδα.</a>
                   <p><a href="/about.php">Δείτε περισσότερα</a></p>
                   <i class="material-icons close-btn" @click="showInfo = false">close</i>
                 </div>
@@ -86,7 +86,7 @@
             <!-- Modal Header -->
             <div class="modal-header">
               <div class="modal-title">
-                <div>{{ selectedElement.First_name }} {{ selectedElement.Last_name }}</div>
+                <div>{{ selectedElement.Fullname_GR }}</div>
                 <div>{{ selectedElement.Party_GR }} </div>
               </div>
               <button type="button" class="close" data-dismiss="modal"><i class="material-icons">close</i></button>
@@ -97,7 +97,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="details-line"><span class="details-line-title">Σύνδεσμος Δήλωσης</span> </div>
-                    <div class="details-line"><span class="details-line-title">Προφίλ:</span> {{ selectedElement.Link_DOI }}</div>
+                    <div class="details-line" v-if="selectedElement.Link_DOI && selectedElement.Link_DOI !== ''"><span class="details-line-title">Προφίλ:</span><a :href="selectedElement.Link_DOI" target="_blank"> {{ selectedElement.Link_DOI.split('/').pop() }}</a></div>
                     <div class="details-line" v-if="selectedElement.declaration"><span class="details-line-title">Σύνολο δηλωθέντων εσόδων</span> {{ selectedElement.declaration.totRevenue }}</div>
                     <div class="details-line" v-if="selectedElement.declaration"><span class="details-line-title">Έσοδα που δηλώθηκαν από σύζυγο</span> {{ selectedElement.declaration.totRevenueSpouse }}</div>
                     <div class="modal-table-container">
@@ -162,7 +162,7 @@
     <script type="text/javascript" src="vendor/js/crossfilter.min.js"></script>
     <script type="text/javascript" src="vendor/js/dc.js"></script>
     <script type="text/javascript" src="vendor/js/dc.cloud.js"></script>
-    <script src="static/tab_a.js"></script>
+    <script src="static/tab_a.js?v=2"></script>
 
  
 </body>
